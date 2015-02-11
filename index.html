@@ -51,6 +51,74 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-11T10:21:21.000Z"><a href="/blog/2015/02/11/seccon-2014-finals/">Feb 11 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/blog/2015/02/11/seccon-2014-finals/">SECCON CTF 2014本戦に参加した</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://2014.seccon.jp/finals.html" target="_blank" rel="external">SECCON CTF 2014 Finals</a>にチームscryptos(@exprsr, @a_r_g_v, @kosk_d, @tatarhy)として参加しました．<br>結果は313点で見事24チーム中24位でした．つらい．<br><img src="https://193s.github.io/blog/imgs/ss02.png" alt=""></p>
+<h1 id="競技開始前">競技開始前</h1>
+<p><blockquote class="twitter-tweet" lang="ja"><p>SECCON前にPC壊れたっぽい</p>&mdash; takoyaki (@a_r_g_v) <a href="https://twitter.com/a_r_g_v/status/563900818814824448" target="_blank" rel="external">2015, 2月 7</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-tweet" lang="ja"><p>戦力が半減した</p>&mdash; 193s (@exprsr) <a href="https://twitter.com/exprsr/status/563901460648165376" target="_blank" rel="external">2015, 2月 7</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p><blockquote class="twitter-tweet" lang="ja"><p>SECCONです <a href="http://t.co/gjTxYkrbI4" target="_blank" rel="external">pic.twitter.com/gjTxYkrbI4</a></p>&mdash; 193s (@exprsr) <a href="https://twitter.com/exprsr/status/563910064428167168" target="_blank" rel="external">2015, 2月 7</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<h1 id="競技開始_-_13:30">競技開始 - 13:30</h1>
+<p>問題は壱〜六の6問で，自分がメインで関わっていた弐と六についてwrite-upを書きます．</p>
+<h2 id="弐_-_問題2">弐 - 問題2</h2>
+<p>キャプチャ認証付きの掲示板．<br>最新の10投稿だけ残って，5分毎にDefense Keywordが書き込まれているチームにDPが入る．</p>
+<p>初King of The Hillで完全に出遅れた．</p>
+<h3 id="DP">DP</h3>
+<p>単純に自分のチームのキーワードを書き込めば良いことに気が付いて，しばらく手動で書き込み続けていたら13pt入った．<br>途中から手動で書き込むのを諦めて自動化しようと試みたが，キャプチャ解読のコードが書けなかった．<br>手動で得点出来るうちにDP稼いでおけばよかった…</p>
+<h3 id="AP">AP</h3>
+<p>Mr.Takedaがかなり早い段階でAPを取っていたので案外単純な問題なのでは，と思って無限に時間を溶かしていた．<br>ランキング（5分間に投稿された回数が多い順に並んでいる）で1位を取るとフラグが取れてキャプチャのパラメータを調整できたらしい…..</p>
+<h2 id="六_-_問題6">六 - 問題6</h2>
+<p>問題の説明は省略します．</p>
+<h3 id="AP-1">AP</h3>
+<p>1日目の後半に6でAPが楽に稼げることにチームの誰かが気が付いて，300pt確保．</p>
+<h3 id="DP-1">DP</h3>
+<p>提出用のスクリプトを書いていましたが，結局まともなコードが書けずに1日目終了．完全に頭が回ってなかった．<br>2日目は夜に徹夜で用意してきたコードを投下しようと思ったらトップが30bytes台になっていたので頭が真っ白になりました．</p>
+<p><blockquote class="twitter-tweet" lang="ja"><p>6のタイミング見計らって平文そのまま返すスクリプトを投げる作戦うちでもちょっとやったんですけど, タイミングが上手く合わなくて失敗したしつらかった</p>&mdash; 193s (@exprsr) <a href="https://twitter.com/exprsr/status/564777658102194177" target="_blank" rel="external">2015, 2月 9</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p><blockquote class="twitter-tweet" lang="ja"><p>len(INPUT)==1024以外なら例外投げるとかそういうので解けない問題が作れるんですけど2日目のトップが36byteとかだったので死んだ</p>&mdash; 193s (@exprsr) <a href="https://twitter.com/exprsr/status/564778063892717571" target="_blank" rel="external">2015, 2月 9</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p><blockquote class="twitter-tweet" lang="ja"><p>めちゃくちゃ頑張ってコード短くしても41byteぐらいだったのでおしまいって感じ</p>&mdash; 193s (@exprsr) <a href="https://twitter.com/exprsr/status/564778178510458880" target="_blank" rel="external">2015, 2月 9</a></blockquote></p>
+<p><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><br>以上です．DPで1点も稼げなかったのでとてもつらい…..</p>
+<h1 id="感想">感想</h1>
+<p>2日目は1点も得点出来ずにバンバン抜かれて，知らないうちにビリになっていました（帰宅中に気が付いた）．<br>なぜか入賞したけどビリだったのでもうダメです．さようなら．</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-01-06T06:25:34.000Z"><a href="/blog/2015/01/06/moudameda/">Jan 6 2015</a></time>
       
       
@@ -204,6 +272,8 @@
   <h3 class="title">Tags</h3>
   <ul class="entry">
   
+    <li><a href="/blog/tags/CTF/">CTF</a><small>1</small></li>
+  
     <li><a href="/blog/tags/hexo/">hexo</a><small>3</small></li>
   
     <li><a href="/blog/tags/test/">test</a><small>1</small></li>
@@ -216,6 +286,10 @@
 <div class="widget tag">
   <h3 class="title">Recent Posts</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/blog/2015/02/11/seccon-2014-finals/">SECCON CTF 2014本戦に参加した</a>
+      </li>
     
       <li>
         <a href="/blog/2015/01/06/moudameda/">やっぱり戻した</a>
