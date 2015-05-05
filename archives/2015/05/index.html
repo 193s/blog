@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Archives: 2015/5 | 193s::Diary 2</title>
+  <meta name="author" content="193s">
+  
+  <meta name="description" content="193s">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="193s::Diary 2"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/blog/favicon.png" rel="icon">
+  <link rel="alternate" href="/blog/atom.xml" title="193s::Diary 2" type="application/atom+xml">
+  <link rel="stylesheet" href="/blog/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/blog/">193s::Diary 2</a></h1>
+  <h2><a href="/blog/">yet another 193s::Diary</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+<h2 class="archive-title">2015/5</h2>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-05-05T03:54:10.000Z"><a href="/blog/2015/05/05/VolgaCTF-2015-Quals-Write-up/">May 5 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/blog/2015/05/05/VolgaCTF-2015-Quals-Write-up/">VolgaCTF 2015 Quals Write-up</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>scryptosです．結果は1800pt 61位でした．<br><img src="/blog/imgs/33a8b.png" alt=""></p>
+<p><blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr">lcg, math problem, carry, find him, homeworkを解いた(1250pts)</p>&mdash; _ (@_193s) <a href="https://twitter.com/_193s/status/594894623325061120" target="_blank" rel="external">2015, 5月 3</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>自分はlcg, math problem, carry, find him, homeworkを解いて1250pts入れました．  </p>
+<p>350pts -&gt; @elliptic_shiho<br>eshiho’s Blog — VolgaCTF 2015 Quals Writeup <a href="http://shiho-elliptic.tumblr.com/post/118172771134/volgactf-2015-quals-writeup" target="_blank" rel="external"></a></p>
+<h1 id="lcg_(crypto_100)">lcg (crypto 100)</h1>
+<p>線形合同法．flag.png.binから先頭8バイトにpngのsignatureが入ることがわかるのでやるだけ．<br><img src="/blog/imgs/2ef8b.png" alt=""><br><code>{linear\_congruential\_generator\_isn&#39;t\_good\_for\_crypto}</code></p>
+<h1 id="math_problem_(ppc_300)">math problem (ppc 300)</h1>
+<p>クソコードを書いて総当たりした．  </p>
+<script src="https://gist.github.com/193s/b656dbb3b61c7c6a93c6.js"></script>
+
+<h1 id="Carry_(crypto_500)">Carry (crypto 500)</h1>
+<p>@elliptic_shihoと真面目に解いていたらkeyの先頭4文字が計算できた．<br>keyは8文字のalphanumeric（多分）で後は4文字特定するだけなのでブルートフォーサを書いて動かしていたところ，<br>計算したkeyの先頭4文字がsanityのコード内のkeyの先頭と一致していることに気がついた．<br>これで復号できたら最悪だよねみたいな話をしながら復号を試みたらFlagが出た．<br><img src="/blog/imgs/3ed65.png" alt=""><br><code>{Approximate_and_synthesize}</code></p>
+<h1 id="Find_Him_(recon_250)">Find Him (recon 250)</h1>
+<p>やるだけ．</p>
+<h1 id="homework_(joy_100)">homework (joy 100)</h1>
+<p><img src="http://files.2015.volgactf.ru/homework/homework.jpg" alt=""><br>やるだけ．<br><img src="/blog/imgs/d4b9b.png" alt=""></p>
+<script src="https://gist.github.com/193s/cb8e84c3c2f0fdce97bf.js"></script>
+
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">It was night, <span class="operator">in</span> <span class="operator">the</span> lonesome October</div><div class="line">Of my most immemorial year:</div><div class="line">It was hard <span class="keyword">by</span> <span class="operator">the</span> dim lake <span class="operator">of</span> Auber,</div><div class="line">In <span class="operator">the</span> misty <span class="keyword">mid</span> region <span class="operator">of</span> Weir-</div><div class="line">It was down <span class="keyword">by</span> <span class="operator">the</span> dank tarn <span class="operator">of</span> Auber,</div><div class="line">In <span class="operator">the</span> ghoul-haunted woodland <span class="operator">of</span> Weir.</div><div class="line"></div><div class="line">Here once, through <span class="operator">an</span> alley Titanic,</div><div class="line">Of cypress, I roamed <span class="operator">with</span> my Soul-</div><div class="line">flag is:</div><div class="line">of_cypress_with_psyche_my_soul</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+
+  <nav id="pagination">
+  
+  
+  <div class="clearfix"></div>
+</nav>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:193s.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/blog/tags/CTF/">CTF</a><small>1</small></li>
+  
+    <li><a href="/blog/tags/hexo/">hexo</a><small>3</small></li>
+  
+    <li><a href="/blog/tags/test/">test</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Recent Posts</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/blog/2015/05/05/VolgaCTF-2015-Quals-Write-up/">VolgaCTF 2015 Quals Write-up</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/02/11/seccon-2014-finals/">SECCON CTF 2014本戦に参加した</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/01/06/moudameda/">やっぱり戻した</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/01/06/theme-d/">またテーマを変えた</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/01/06/theme-c/">テーマを変えた</a>
+      </li>
+    
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 193s
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/blog/js/jquery.imagesloaded.min.js"></script>
+<script src="/blog/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
