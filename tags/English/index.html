@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>English | 193s::Diary 2</title>
+  <meta name="author" content="193s">
+  
+  <meta name="description" content="193s">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="193s::Diary 2"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/blog/favicon.png" rel="icon">
+  <link rel="alternate" href="/blog/atom.xml" title="193s::Diary 2" type="application/atom+xml">
+  <link rel="stylesheet" href="/blog/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/blog/">193s::Diary 2</a></h1>
+  <h2><a href="/blog/">yet another 193s::Diary</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+<h2 class="archive-title tag">English</h2>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-10-19T14:23:31.000Z"><a href="/blog/2015/10/19/hitcon-2015-rsabin-writeup/">Oct 19 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/blog/2015/10/19/hitcon-2015-rsabin-writeup/">HITCON CTF 2015 Quals rsabin write-up</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><blockquote class="twitter-tweet" lang="ja"><p lang="en" dir="ltr">HITCON: participated as a member of fuzzi3, solved just one chall: rsabin (crypto 314)</p>&mdash; Ikumi Shimizu (@_193s) <a href="https://twitter.com/_193s/status/655757549891747840" target="_blank" rel="external">2015, 10月 18</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<h2 id="rsabin_(Crypto_314)">rsabin (Crypto 314)</h2>
+<p>author: 193s (fuzzi3)</p>
+<p>Python script <code>rsabin.py</code> and an encrypted flag was given.<br>The modulo, N was 314-bit, so first of all I started factoring N using <a href="http://sourceforge.net/projects/yafu/" target="_blank" rel="external">yafu</a>.<br>It took over 70 minutes…<br>p = 164184701914508585475304431352949988726937945291<br>q = 123722643358410276082662590855480232574295213977</p>
+<p>Looks good, there we go!</p>
+<h2 id="rsabin_=_rsa_+_rabin">rsabin = rsa + rabin</h2>
+<p>It seems like you just need to calculate <code>m = c^d (mod N)</code> where private key, d = <code>mod_inv(e, φ(N))</code>, but it won’t work: In this case, <code>mod_inv(e, φ(N))</code> can’t be calculated! Yes, e, RSA’s public exponent must be chosen as co-prime to φ(N).</p>
+<p>e = 31415926535897932384 = 2^5 * 563 * 15647 * 93967 * 1186001</p>
+<p>φ(N) = (p-1)(q-1) = 2^4 * 3^2 * 5 * 13 * 3769 * 27077 * 17846641 * 83901947 * 159936353 * 310427287 * 95195293927205442569 * 3004887825587533352438332710071</p>
+<p>The challenge title <code>rsabin</code> reminded me of <code>rsa</code> and <code>rabin</code>!<br>The encryption algorithm for rabin cipher (in case k=0) is as follows:<br><code>c = m^2 mod N</code><br>I was certain that I can calculate <code>m^(e/2) mod N</code> from <code>m^e mod N</code> when e is an even number.</p>
+<p>So, what I need to do is:</p>
+<ul>
+<li>apply this method 5 times, then I get <code>c&#39; = m^e&#39; mod N</code> where e’ = e/32 (satisfies <code>gcd(e&#39;, φ(N)) = 1</code>)</li>
+<li>decrypt <code>m</code> with normal RSA:<br><code>d&#39; = mod_inv(e&#39;, φ(N))</code>, <code>m = c&#39;^d&#39; mod N</code>.</li>
+</ul>
+<p>Note that decryption algorithm for rabin cipher returns 4 numbers (m1, m2, m3, m4), and the right plaintext is one of them (there is no way to tell which is the correct one). Because of this, there are 4**5=1024 possible ways of <code>c&#39;</code>.</p>
+<h2 id="bruteforcing_missing_bits">bruteforcing missing bits</h2>
+<p>I calculated <code>m</code> by using above method for 1024 possible combinations (actually only 16 unique values  satisfied <code>m&#39;^e = c</code>), but none of them looked like a flag. </p>
+<p>rsabin.py:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">flag = open(<span class="string">'flag'</span>).read().strip()</div><div class="line"><span class="keyword">assert</span> len(flag) == <span class="number">50</span></div></pre></td></tr></table></figure>
+
+<p>What?! FLAG is 400-bits length but N is 314-bits?<br>ok, that means that some upper bits of the flag are missing.<br>( I contacted the admin and made sure that the flag is not in the following format: <code>\x00\x00\x00...\x00hitcon{....}</code> )</p>
+<p>We know that the flag starts with <code>hitcon{</code>, followed by ascii-printable characters, and ends with <code>}</code>, so I tried to bruteforce all missing bits to find the flag matches <code>^hitcon{[:print:]+}$</code> for each m.</p>
+<p>I wrote a little script, and after 20 minutes, my script showed me the flag!</p>
+<p>flag: <code>hitcon{Congratz~~! Let&#39;s eat an apple pi &lt;3.14159}</code></p>
+<p>solver: <a href="https://gist.github.com/193s/c1391481a1977dcb1570" target="_blank" rel="external">https://gist.github.com/193s/c1391481a1977dcb1570</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+
+  <nav id="pagination">
+  
+  
+  <div class="clearfix"></div>
+</nav>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:193s.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/blog/tags/CTF/">CTF</a><small>6</small></li>
+  
+    <li><a href="/blog/tags/English/">English</a><small>1</small></li>
+  
+    <li><a href="/blog/tags/test/">test</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Recent Posts</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/blog/2015/10/19/hitcon-2015-rsabin-writeup/">HITCON CTF 2015 Quals rsabin write-up</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/10/13/asis-ctf-finals-2015-writeup/">ASIS CTF Finals 2015 write-up</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/09/23/csaw-ctf-2015-writeup/">CSAW CTF 2015 writeup</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/09/08/MMACTF2015-writeup/">MMA CTF 1st 2015に出た話</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/08/31/tductf2015-writeup/">TDUCTF 2015の感想とwriteup</a>
+      </li>
+    
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 193s
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/blog/js/jquery.imagesloaded.min.js"></script>
+<script src="/blog/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
