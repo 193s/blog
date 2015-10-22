@@ -84,13 +84,13 @@ rsabin (Crypto 314">
 <li>decrypt <code>m</code> with normal RSA:<br><code>d&#39; = mod_inv(e&#39;, φ(N))</code>, <code>m = c&#39;^d&#39; mod N</code>.</li>
 </ul>
 <p>Note that decryption algorithm for rabin cipher returns 4 numbers (m1, m2, m3, m4), and the right plaintext is one of them (there is no way to tell which is the correct one). Because of this, there are 4**5=1024 possible ways of <code>c&#39;</code>.</p>
-<h2 id="bruteforcing_missing_bits">bruteforcing missing bits</h2>
+<h2 id="bruteforcing_missing_info">bruteforcing missing info</h2>
 <p>I calculated <code>m</code> by using above method for 1024 possible combinations (actually only 16 unique values  satisfied <code>m&#39;^e = c</code>), but none of them looked like a flag. </p>
 <p>rsabin.py:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">flag = open(<span class="string">'flag'</span>).read().strip()</div><div class="line"><span class="keyword">assert</span> len(flag) == <span class="number">50</span></div></pre></td></tr></table></figure>
 
-<p>What?! FLAG is 400-bits length but N is 314-bits?<br>ok, that means that some upper bits of the flag are missing.<br>( I contacted the admin and made sure that the flag is not in the following format: <code>\x00\x00\x00...\x00hitcon{....}</code> )</p>
-<p>We know that the flag starts with <code>hitcon{</code>, followed by ascii-printable characters, and ends with <code>}</code>, so I tried to bruteforce all missing bits to find the flag matches <code>^hitcon{[:print:]+}$</code> for each m.</p>
+<p>What?! FLAG is 400-bits length but N is 314-bits?<br>ok, that means that some upper bits of the flag are missing. (now I have <code>m = FLAG mod N</code>, so just need to know <code>i</code> satisfies <code>FLAG = iN+m</code>)<br>( I contacted the admin and made sure that the flag is not in the following format: <code>\x00\x00\x00...\x00hitcon{....}</code> )</p>
+<p>We know that the flag starts with <code>hitcon{</code>, followed by ascii-printable characters, and ends with <code>}</code>, so I tried to bruteforce <code>i</code> (satisfies <code>FLAG = iN+m</code>) to find the flag matches <code>^hitcon{[:print:]+}$</code> for each m.</p>
 <p>I wrote a little script, and after 20 minutes, my script showed me the flag!</p>
 <p>flag: <code>hitcon{Congratz~~! Let&#39;s eat an apple pi &lt;3.14159}</code></p>
 <p>solver: <a href="https://gist.github.com/193s/c1391481a1977dcb1570" target="_blank" rel="external">https://gist.github.com/193s/c1391481a1977dcb1570</a></p>
