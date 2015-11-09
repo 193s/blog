@@ -76,43 +76,43 @@
 
 <h2 id="出題された問題の1行write-up">出題された問題の1行write-up</h2>
 <p><img src="http://i.imgur.com/mUQIQHi.png" alt=""></p>
-<h4 id="TRY_FIRST_(sample_10):">TRY FIRST (sample 10):</h4>
+<h3 id="TRY_FIRST_(sample_10):">TRY FIRST (sample 10):</h3>
 <p>flagをsubmitするだけ</p>
-<h4 id="Find_from_binary_(binary_100):">Find from binary (binary 100):</h4>
+<h3 id="Find_from_binary_(binary_100):">Find from binary (binary 100):</h3>
 <p>32-bit ELF．<code>a=1; if(a&gt;2) { print(flag); }</code>なのでeipを適当に飛ばすだけ</p>
-<h4 id="Guess_the_flag_(binary_200):">Guess the flag (binary 200):</h4>
+<h3 id="Guess_the_flag_(binary_200):">Guess the flag (binary 200):</h3>
 <p>32-bit ELF. 入力がflagかどうかをチェックするバイナリで，.rodataのバイト列と0xffをxorしてflag</p>
-<h4 id="Where_is_the_flag_(binary_300):">Where is the flag (binary 300):</h4>
+<h3 id="Where_is_the_flag_(binary_300):">Where is the flag (binary 300):</h3>
 <p>.NET binary．限られた環境でしか起動できないらしく，静的解析だけでは解けなかった．</p>
-<h4 id="Easy_decrypto_(crypto_100):">Easy decrypto (crypto 100):</h4>
+<h3 id="Easy_decrypto_(crypto_100):">Easy decrypto (crypto 100):</h3>
 <p>base64 decodeしてflag</p>
-<h4 id="Simple_crypto_(crypto_100):">Simple crypto (crypto 100):</h4>
+<h3 id="Simple_crypto_(crypto_100):">Simple crypto (crypto 100):</h3>
 <p>rot13を戻すだけ</p>
-<h4 id="Access_to_restricted_url_(network_100):">Access to restricted url (network 100):</h4>
+<h3 id="Access_to_restricted_url_(network_100):">Access to restricted url (network 100):</h3>
 <p>pcap．httpのパケットでBasic認証のパスワードがflagになっている</p>
-<h4 id="Invisible_message_(network_100):">Invisible message (network 100):</h4>
+<h3 id="Invisible_message_(network_100):">Invisible message (network 100):</h3>
 <p>特定の条件を満たすtcpパケットのidentificationの1バイト目を繋げるとflag</p>
-<h4 id="Follow_the_mail_(network_300):">Follow the mail (network 300):</h4>
+<h3 id="Follow_the_mail_(network_300):">Follow the mail (network 300):</h3>
 <p>smtpのパケット．メールの本文を読んでflag.zipのパスワードをguessしておわり</p>
-<h4 id="National_flag_(programming_100):">National flag (programming 100):</h4>
+<h3 id="National_flag_(programming_100):">National flag (programming 100):</h3>
 <p>turtleで国旗を描画するpythonのコード．適当に書き換えて動かして画像検索しておわり</p>
-<h4 id="BaseBall_(programming_300):">BaseBall (programming 300):</h4>
+<h3 id="BaseBall_(programming_300):">BaseBall (programming 300):</h3>
 <p>野球のシミュレーション．気合で書いておわり</p>
-<h4 id="RPN_(programming_200):">RPN (programming 200):</h4>
+<h3 id="RPN_(programming_200):">RPN (programming 200):</h3>
 <p>逆ポーランド記法の式で，リテラルがnum(基数)の形になっているので適当にパースして投げるだけ 答えをlong_to_bytesしてflag．</p>
-<h4 id="Invisible_flag_(web_100):">Invisible flag (web 100):</h4>
+<h3 id="Invisible_flag_(web_100):">Invisible flag (web 100):</h3>
 <p>flag.phpにアクセスすると30x redirectで飛ばされる．response bodyにflag</p>
-<h4 id="Login_(web_100):">Login (web 100):</h4>
+<h3 id="Login_(web_100):">Login (web 100):</h3>
 <p>気付いたらflagが出ていた．よくわからない</p>
-<h4 id="Your_browser_is_not_supported_(web_200):">Your browser is not supported (web 200):</h4>
+<h3 id="Your_browser_is_not_supported_(web_200):">Your browser is not supported (web 200):</h3>
 <p>UAがnetscapeだとflagが出るっぽい．引っ張ってきたUAのリストからランダムに選んで投げさせていたら解けた</p>
-<h4 id="Excel_(unknown_100):">Excel (unknown 100):</h4>
+<h3 id="Excel_(unknown_100):">Excel (unknown 100):</h3>
 <p>excelの各セルのbackground-colorを消すとflagのascii artが出てくる</p>
-<h4 id="Invisible_(unknown_100):">Invisible (unknown 100):</h4>
+<h3 id="Invisible_(unknown_100):">Invisible (unknown 100):</h3>
 <p>pngのstego．stegsolveなどに投げておわり</p>
-<h4 id="PDF_(unknown_100):">PDF (unknown 100):</h4>
+<h3 id="PDF_(unknown_100):">PDF (unknown 100):</h3>
 <p>flagが黒塗りで隠されているpdf．読むだけ</p>
-<h4 id="Who_is_author_(unkown_200):">Who is author (unkown 200):</h4>
+<h3 id="Who_is_author_(unkown_200):">Who is author (unkown 200):</h3>
 <p>適当にgoogle検索して投げるだけ</p>
 <p>Excel, Find from binary, Guess the flag, Invisible message, Follow the mailは@_N4NU_に解いてもらった．</p>
 <h2 id="まとめ">まとめ</h2>
