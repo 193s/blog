@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+<script>
+  if (window.location.host.indexOf('github.io') > -1 && window.location.protocol != "https:"){window.location.protocol = "https";}
+  </script>
+  
+  <title>サイバー甲子園 参加レポート | 193s::Diary</title>
+  <meta name="author" content="193s">
+  
+  <meta name="description" content="SECCON実行委員会/JNSAが主催するサイバー甲子園という大会に@_N4NU_と一緒にscryptosとして参加して優勝してきた．
+@_N4NU_のwriteup: http://nanuyokakinu.hatenablog.jp/entry/2015/11/08/102550
+サイバー甲子園">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="サイバー甲子園 参加レポート"/>
+  <meta property="og:site_name" content="193s::Diary"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/blog/favicon.png" rel="icon">
+  <link rel="alternate" href="/blog/atom.xml" title="193s::Diary" type="application/atom+xml">
+  <link rel="stylesheet" href="/blog/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/blog/">193s::Diary</a></h1>
+  <h2><a href="/blog/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-11-09T11:13:16.000Z"><a href="/blog/2015/11/09/cyber-koshien-2015/">Nov 9 2015</a></time>
+      
+      
+  
+    <h1 class="title">サイバー甲子園 参加レポート</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>SECCON実行委員会/JNSAが主催する<a href="http://2015.seccon.jp/cyber-koshien.html" target="_blank" rel="external">サイバー甲子園</a>という大会に<a href="https://twitter.com/_N4NU_" target="_blank" rel="external">@_N4NU_</a>と一緒にscryptosとして参加して優勝してきた．</p>
+<p>@_N4NU_のwriteup: <a href="http://nanuyokakinu.hatenablog.jp/entry/2015/11/08/102550" target="_blank" rel="external">http://nanuyokakinu.hatenablog.jp/entry/2015/11/08/102550</a></p>
+<p><blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr">サイバー甲子園　接戦！　残すところ1時間　<a href="https://twitter.com/hashtag/SECCON?src=hash" target="_blank" rel="external">#SECCON</a> <a href="https://t.co/MTpMZzzlFL" target="_blank" rel="external">pic.twitter.com/MTpMZzzlFL</a></p>&mdash; SECCON CTF (@secconctf) <a href="https://twitter.com/secconctf/status/662879691485769730" target="_blank" rel="external">2015, 11月 7</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr">サイバー甲子園 優勝しました <a href="https://twitter.com/hashtag/SECCON?src=hash" target="_blank" rel="external">#SECCON</a> <a href="https://t.co/KG0YVMcad7" target="_blank" rel="external">pic.twitter.com/KG0YVMcad7</a></p>&mdash; Ikumi Shimizu (@_193s) <a href="https://twitter.com/_193s/status/662901672432132096" target="_blank" rel="external">2015, 11月 7</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<h2 id="出題された問題の1行write-up">出題された問題の1行write-up</h2>
+<p><img src="http://i.imgur.com/mUQIQHi.png" alt=""></p>
+<h4 id="TRY_FIRST_(sample_10):">TRY FIRST (sample 10):</h4>
+<p>flagをsubmitするだけ</p>
+<h4 id="Find_from_binary_(binary_100):">Find from binary (binary 100):</h4>
+<p>32-bit ELF．<code>a=1; if(a&gt;2) { print(flag); }</code>なのでeipを適当に飛ばすだけ</p>
+<h4 id="Guess_the_flag_(binary_200):">Guess the flag (binary 200):</h4>
+<p>32-bit ELF. 入力がflagかどうかをチェックするバイナリで，.rodataのバイト列と0xffをxorしてflag</p>
+<h4 id="Where_is_the_flag_(binary_300):">Where is the flag (binary 300):</h4>
+<p>.NET binary．限られた環境でしか起動できないらしく，静的解析だけでは解けなかった．</p>
+<h4 id="Easy_decrypto_(crypto_100):">Easy decrypto (crypto 100):</h4>
+<p>base64 decodeしてflag</p>
+<h4 id="Simple_crypto_(crypto_100):">Simple crypto (crypto 100):</h4>
+<p>rot13を戻すだけ</p>
+<h4 id="Access_to_restricted_url_(network_100):">Access to restricted url (network 100):</h4>
+<p>pcap．httpのパケットでBasic認証のパスワードがflagになっている</p>
+<h4 id="Invisible_message_(network_100):">Invisible message (network 100):</h4>
+<p>特定の条件を満たすtcpパケットのidentificationの1バイト目を繋げるとflag</p>
+<h4 id="Follow_the_mail_(network_300):">Follow the mail (network 300):</h4>
+<p>smtpのパケット．メールの本文を読んでflag.zipのパスワードをguessしておわり</p>
+<h4 id="National_flag_(programming_100):">National flag (programming 100):</h4>
+<p>turtleで国旗を描画するpythonのコード．適当に書き換えて動かして画像検索しておわり</p>
+<h4 id="BaseBall_(programming_300):">BaseBall (programming 300):</h4>
+<p>野球のシミュレーション．気合で書いておわり</p>
+<h4 id="RPN_(programming_200):">RPN (programming 200):</h4>
+<p>逆ポーランド記法の式で，リテラルがnum(基数)の形になっているので適当にパースして投げるだけ 答えをlong_to_bytesしてflag．</p>
+<h4 id="Invisible_flag_(web_100):">Invisible flag (web 100):</h4>
+<p>flag.phpにアクセスすると30x redirectで飛ばされる．response bodyにflag</p>
+<h4 id="Login_(web_100):">Login (web 100):</h4>
+<p>気付いたらflagが出ていた．よくわからない</p>
+<h4 id="Your_browser_is_not_supported_(web_200):">Your browser is not supported (web 200):</h4>
+<p>UAがnetscapeだとflagが出るっぽい．引っ張ってきたUAのリストからランダムに選んで投げさせていたら解けた</p>
+<h4 id="Excel_(unknown_100):">Excel (unknown 100):</h4>
+<p>excelの各セルのbackground-colorを消すとflagのascii artが出てくる</p>
+<h4 id="Invisible_(unknown_100):">Invisible (unknown 100):</h4>
+<p>pngのstego．stegsolveなどに投げておわり</p>
+<h4 id="PDF_(unknown_100):">PDF (unknown 100):</h4>
+<p>flagが黒塗りで隠されているpdf．読むだけ</p>
+<h4 id="Who_is_author_(unkown_200):">Who is author (unkown 200):</h4>
+<p>適当にgoogle検索して投げるだけ</p>
+<p>Excel, Find from binary, Guess the flag, Invisible message, Follow the mailは@_N4NU_に解いてもらった．</p>
+<h2 id="まとめ">まとめ</h2>
+<p>優勝はやるだけ，難易度の割に問題数が少なく差を付けにくかった．<br><img src="http://i.imgur.com/ml6ZmoI.png" alt=""></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/blog/tags/CTF/">CTF</a>
+  </div>
+
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:193s.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/blog/tags/CTF/">CTF</a><small>7</small></li>
+  
+    <li><a href="/blog/tags/English/">English</a><small>1</small></li>
+  
+    <li><a href="/blog/tags/test/">test</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Recent Posts</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/blog/2015/11/09/cyber-koshien-2015/">サイバー甲子園 参加レポート</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/10/19/hitcon-2015-rsabin-writeup/">HITCON CTF 2015 Quals rsabin write-up</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/10/13/asis-ctf-finals-2015-writeup/">ASIS CTF Finals 2015 write-up</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/09/23/csaw-ctf-2015-writeup/">CSAW CTF 2015 writeup</a>
+      </li>
+    
+      <li>
+        <a href="/blog/2015/09/08/MMACTF2015-writeup/">MMA CTF 1st 2015に出た話</a>
+      </li>
+    
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 193s
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/blog/js/jquery.imagesloaded.min.js"></script>
+<script src="/blog/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
